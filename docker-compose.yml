@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  reporting-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    container_name: reporting-api
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      NODE_ENV: production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
